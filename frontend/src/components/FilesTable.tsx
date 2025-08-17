@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import {
     Alert,
     Box,
+    Button,
     CircularProgress,
     Paper,
     Table,
@@ -20,20 +21,20 @@ export default function FilesTable () {
     const [ loading, setLoading ] = useState(true);
     const [ error, setError ] = useState<string | null>(null);
     
+    const loadFiles = async () => {
+        try {
+            setLoading(true);
+            setError(null);
+            const data = await fetchFiles();
+            setFiles(data);
+        } catch {
+            setError('Failed to fetch files. Please check if the backend is running.');
+        } finally {
+            setLoading(false);
+        }
+    };
+    
     useEffect(() => {
-        const loadFiles = async () => {
-            try {
-                setLoading(true);
-                setError(null);
-                const data = await fetchFiles();
-                setFiles(data);
-            } catch {
-                setError('Failed to fetch files. Please check if the backend is running.');
-            } finally {
-                setLoading(false);
-            }
-        };
-        
         loadFiles();
     }, []);
     
@@ -54,25 +55,36 @@ export default function FilesTable () {
     }
     
     return (
-        <TableContainer component={ Paper } sx={ { mt: 4 } }>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <TableCell>Filename</TableCell>
-                        <TableCell>Timestamp</TableCell>
-                        <TableCell>Status</TableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    { files.map((file, index) => (
-                        <TableRow key={ index }>
-                            <TableCell>{ file.filename }</TableCell>
-                            <TableCell>{ file.timestamp }</TableCell>
-                            <TableCell>{ file.status }</TableCell>
+        <Box>
+            <TableContainer component={ Paper } sx={ { mt: 4 } }>
+                <Table>
+                    <TableHead>
+                        <TableRow>
+                            <TableCell>Filename</TableCell>
+                            <TableCell>Timestamp</TableCell>
+                            <TableCell>Status</TableCell>
                         </TableRow>
-                    )) }
-                </TableBody>
-            </Table>
-        </TableContainer>
+                    </TableHead>
+                    <TableBody>
+                        { files.map((file, index) => (
+                            <TableRow key={ index }>
+                                <TableCell>{ file.filename }</TableCell>
+                                <TableCell>{ file.timestamp }</TableCell>
+                                <TableCell>{ file.status }</TableCell>
+                            </TableRow>
+                        )) }
+                    </TableBody>
+                </Table>
+            </TableContainer>
+            <Box display="flex" justifyContent="flex-end" sx={ { mt: 2 } }>
+                <Button
+                    variant="contained"
+                    onClick={ loadFiles }
+                    disabled={ loading }
+                >
+                    Refresh
+                </Button>
+            </Box>
+        </Box>
     );
 }
