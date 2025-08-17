@@ -55,10 +55,16 @@ Returns all processed files with their status.
 
 ## Setup
 
-1. Install dependencies:
+1. Install dependencies and create directories:
 
 ```bash
+make install
+```
+
+Or manually:
+```bash
 npm install
+mkdir -p incoming done error
 ```
 
 2. Build and run:
