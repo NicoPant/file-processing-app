@@ -42,7 +42,7 @@ file-processing-app/
 - Python script execution
 
 **Frontend:**
-- Next.js + React
+- Next.js
 - Material-UI components
 - Real-time file status display
 
